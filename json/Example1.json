@@ -1,0 +1,8 @@
+{
+    "user_id": 1,
+    "username": "User 1",
+    "firstname": "First Name",
+    "lastname": "Last name",
+    "email": "email@email.com",
+    "token": "123456789"
+}

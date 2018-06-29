@@ -1,0 +1,11 @@
+//
+//  {@OBJECT}.swift
+//
+//  Created by Felipe Kimio
+//
+
+struct {@OBJECT} {
+    {@FIELDS}
+    let {@KEY}: {@TYPE}
+    {@FIELDS}
+}
