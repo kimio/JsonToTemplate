@@ -1,32 +1,15 @@
 require 'json'
+require './Constants.rb'
 require './Template.rb'
-
-module Types
-    HASH = "Hash"
-    ARRAY = "Array"
-    STRING = "String"
-    INT = "Integer"
-    FLOAT = "Float"
-    NILCLASS = "NilClass"
-    OBJECT = "Object"
-end
-
-ARGS_HELP = ["-h", "--help"]
 
 class JsonToTemplate
     JSON_EXTENSION = ".json"
     JSON_PATH = "json/*.json"
     TEMPLATE_NOT_FOUND = "Template not found :("
     INVALID_TEMPLATE = "Invalid Template :p"
-    HOW_TO_USE = "How to use"
-
-    module Keys
-        TYPE = "Type"
-        VALUE = "Value"
-    end
 
     @@hash = Hash.new
-
+    
     def addNewKeyObject(key, fileName, arrayCounter)
         if arrayCounter == -1
             if @@hash[fileName] 
@@ -104,7 +87,7 @@ class JsonToTemplate
 end
 
 if ARGS_HELP.include? ARGV[0]
-    puts JsonToTemplate::HOW_TO_USE
+    puts HOW_TO_USE
 else
     jsonToTemplate = JsonToTemplate.new()
     jsonToTemplate.createTemplate(ARGV[0])
