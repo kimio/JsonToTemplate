@@ -8,7 +8,7 @@
 ```open json```
 
 
-#### 3. Create the template file and put into template file or not
+#### 3. Create the template file and put into template folder or not
     To create your template file you can use the follow tags:
 
     {@OBJECT} - name of json file or json key
