@@ -1,8 +1,12 @@
+require './Util.rb'
+
 class Template
 
     module Regex
         BETWEEN_FIELDS = /\{@FIELDS}(.*?){@FIELDS}/m
         BETWEEN_KEY = /\{@KEY(.*?)}/m
+        BETWEEN_TYPE = /\{@TYPE(.*?)}/m
+        BETWEEN_VALUE = /\{@VALUE(.*?)}/m
     end
     
     @@template = ""
@@ -11,26 +15,8 @@ class Template
         @@template = template
     end
 
-    def format(tag, value)
-        if tag.captures.length > 0
-            if tag[0].include? Format::FIRST_TO_LOWER
-                value = firstToLower(value)
-            end
-            return tag.pre_match +
-            value +
-            tag.post_match
-        end
-    end
-
-    def firstToLower(string)
-        str = string
-        return str[0].downcase + str[1..-1]
-    end
-
     def setTemplate(data)
-        # puts data
         data.each do |object, values|
-            # class name
             template = @@template.gsub(Tags::OBJECT, object)
             template = setFields(template, values)
             puts template
@@ -43,11 +29,11 @@ class Template
             if key.class.name == Types::HASH
                 fieldsConverted+=setKeysAndTypes(template, fields, key)
             else
-                fieldsReplaced = ""
                 fieldsWithKey = fields
                 fieldsWithKey = setKeys(template, fieldsWithKey, key)
-                fieldsReplaced+= setTypes(template, fieldsWithKey, values)
-                fieldsConverted+=fieldsReplaced
+                fieldsWithKey = setTypes(template, fieldsWithKey, values[Model::TYPE])
+                fieldsWithKey = setValues(template, fieldsWithKey, values[Model::VALUE].to_s, values[Model::TYPE])
+                fieldsConverted+=fieldsWithKey
             end
         end
         return fieldsConverted
@@ -72,7 +58,7 @@ class Template
 
     def setKeys(template, fields, key)
         betweenKey = fields.match(Regex::BETWEEN_KEY, 1)
-        formated = format(betweenKey, key)
+        formated = Util.format(betweenKey, key)
         betweenKey = formated.match(Regex::BETWEEN_KEY, 1)
         if betweenKey.class.name != Types::NILCLASS
             if betweenKey.captures.length > 0 
@@ -82,7 +68,36 @@ class Template
         return formated
     end
 
-    def setTypes(template, fields, values)
-        return fields.gsub(Tags::TYPE, values[Model::TYPE])
+    def setTypes(template, fields, type)
+        betweenType = fields.match(Regex::BETWEEN_TYPE, 1)
+        if betweenType.class.name != Types::NILCLASS
+            formated = Util.format(betweenType, type)
+            betweenType = formated.match(Regex::BETWEEN_TYPE, 1)
+            if betweenType.class.name != Types::NILCLASS
+                if betweenType.captures.length > 0 
+                    return setTypes(template, formated, type)
+                end
+            end
+            return formated
+        end
+        return fields
+    end
+
+    def setValues(template, fields, value, type)
+        if type == Types::STRING
+            value = '"' + value + '"'
+        end
+        betweenValue = fields.match(Regex::BETWEEN_VALUE, 1)
+        if betweenValue.class.name != Types::NILCLASS
+            formated = Util.format(betweenValue, value)
+            betweenValue = formated.match(Regex::BETWEEN_VALUE, 1)
+            if betweenValue.class.name != Types::NILCLASS
+                if betweenValue.captures.length > 0 
+                    return setValues(template, formated, value)
+                end
+            end
+            return formated
+        end
+        return fields
     end
 end

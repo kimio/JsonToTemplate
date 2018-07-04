@@ -1,7 +1,7 @@
 //
 //  {@OBJECT}.swift
 //
-//  Created by Felipe Kimio
+//  Created by Felipe Kimio Nishikaku
 //
 
 import Foundation
@@ -9,13 +9,13 @@ import Mapper
 
 struct {@OBJECT}: Mappable {
     {@FIELDS}
-    let {@KEY_FIRST_TO_LOWER}: {@TYPE}
+    let {@KEY.CAMELCASE}: {@TYPE}
     {@FIELDS}
 
      init(map: Mapper) throws {
         do {
         {@FIELDS}
-            {@KEY_FIRST_TO_LOWER} = try map.from("{@KEY}")
+            {@KEY.CAMELCASE} = try map.from("{@KEY}")
         {@FIELDS}
         } catch let error {
             MapperLogger.logError(error, file: #file, line: #line)

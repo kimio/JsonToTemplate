@@ -5,8 +5,6 @@ require './Template.rb'
 class JsonToTemplate
     JSON_EXTENSION = ".json"
     JSON_PATH = "json/*.json"
-    TEMPLATE_NOT_FOUND = "Template not found :("
-    INVALID_TEMPLATE = "Invalid Template :p"
 
     @@hash = Hash.new
     
